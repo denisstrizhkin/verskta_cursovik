@@ -145,16 +145,37 @@ const displayGame = (parent) => {
   container.appendChild(cube);
 
   const timeAnswer = getRandomFloat(2, 4);
-  const animationID = getRandomInt(1, 2);
-  if (animationID === 2) {
-    cube.style.left = '92%';
+  // const animationID = getRandomInt(1, 4);
+  const animationID = 4;
+
+  switch (animationID) {
+    case 1:
+      cube.classList.add('cube-left');
+      break;
+    case 2:
+      cube.classList.add('cube-right');
+      break;
+    case 3:
+      cube.classList.add('cube-bottom');
+      break;
+    case 4:
+      cube.classList.add('cube-top');
+      break;
+    default:
+      break;
   }
 
   btnWatch.onclick = () => {
     cube.style.animationDuration = `${timeAnswer}s`;
-    cube.style.animationName = `cube-easy-${animationID}`;
+    cube.style.animationName = `cube-${difficulty}-${Math.floor((animationID + 1) / 2)}`;
+    if (animationID === 2 || animationID === 3) {
+      cube.style.animationDirection = 'reverse';
+    }
+
     btnWatch.style.opacity = 0;
   };
+
+  beforeNextGame = 0;
 
   btnAnswer.onclick = () => {
     const val = input.value;

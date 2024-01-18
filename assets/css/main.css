@@ -61,9 +61,33 @@ header {
   height: 8%;
   position: absolute;
   background: red;
-  bottom: calc(50% - 4%);
   animation-timing-function: linear;
   animation-fill-mode: forwards;
+  /*
+  animation-duration: 3s;
+  animation-name: cube-normal-1;
+  animation-direction: reverse;
+  */
+}
+
+.cube-top {
+  left: calc((100% - 8%) / 2);
+  bottom: calc(100% - 8%);
+}
+
+.cube-bottom {
+  left: calc((100% - 8%) / 2);
+  bottom: 0%;
+}
+
+.cube-right {
+  left: calc(100% - 8%);
+  bottom: calc((100% - 8%) / 2);
+}
+
+.cube-left {
+  left: 0%;
+  bottom: calc((100% - 8%) / 2);
 }
 
 @keyframes cube-easy-1 {
@@ -78,10 +102,35 @@ header {
 
 @keyframes cube-easy-2 {
   from {
-    left: calc(100% - 8%);
+    bottom: calc(100% - 8%);
   }
 
   to {
+    bottom: 0%;
+  }
+}
+
+@keyframes cube-normal-1 {
+  0% {
     left: 0%;
+  }
+
+  25% {
+    left: calc((100% - 8%) / 4 * 1);
+    bottom: calc(100% - 8%);
+  }
+
+  50% {
+    left: calc((100% - 8%) / 4 * 2);
+    bottom: 0%;
+  }
+
+  75% {
+    left: calc((100% - 8%) / 4 * 3);
+    bottom: calc(100% - 8%);
+  }
+
+  100% {
+    left: calc(100% - 8%);
   }
 }
