@@ -134,3 +134,28 @@ header {
     left: calc(100% - 8%);
   }
 }
+
+@keyframes cube-normal-2 {
+  0% {
+    bottom: calc(100% - 8%);
+  }
+
+  25% {
+    left: 0%;
+    bottom: calc((100% - 8%) / 4 * 3);
+  }
+
+  50% {
+    left: calc(100% - 8%);
+    bottom: calc((100% - 8%) / 4 * 2);
+  }
+
+  75% {
+    left: 0%;
+    bottom: calc((100% - 8%) / 4 * 1);
+  }
+
+  100% {
+    bottom: 0%;
+  }
+}

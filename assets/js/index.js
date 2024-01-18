@@ -147,6 +147,7 @@ const displayGame = (parent) => {
   const timeAnswer = getRandomFloat(2, 4);
   // const animationID = getRandomInt(1, 4);
   const animationID = 4;
+  beforeNextGame = 0;
 
   switch (animationID) {
     case 1:
@@ -174,8 +175,6 @@ const displayGame = (parent) => {
 
     btnWatch.style.opacity = 0;
   };
-
-  beforeNextGame = 0;
 
   btnAnswer.onclick = () => {
     const val = input.value;
