@@ -146,7 +146,7 @@ const displayGame = (parent) => {
 
   const timeAnswer = getRandomFloat(2, 4);
   // const animationID = getRandomInt(1, 4);
-  const animationID = 2;
+  const animationID = 3;
   beforeNextGame = 0;
 
   switch (animationID) {
