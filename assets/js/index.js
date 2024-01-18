@@ -8,6 +8,20 @@ const getRandomInt = (start, end) => Math.floor(Math.random() * (end - start + 1
 
 const getRandomFloat = (start, end) => Math.random() * (end - start) + start;
 
+const getScores = () => {
+  const scores = JSON.parse(localStorage.getItem('scores'));
+  if (scores === null) {
+    return [];
+  }
+  return scores;
+};
+
+const saveScore = () => {
+  const scores = getScores();
+  scores.push({ user: username, score: userScore });
+  localStorage.setItem('scores', JSON.stringify(scores));
+};
+
 const displayStart = (parent) => {
   const el = parent;
   el.innerHTML = `
@@ -24,10 +38,33 @@ const displayScore = (parent) => {
   const el = parent;
   el.innerHTML = `
     <h2>Рейтинговая Таблица</h2>
+    <table id="score-table">
+      <tr>
+        <th>Пользователь</th>
+        <th>Очки</th>
+      </tr>
+    </table>
     <a href="#start">
       <button id="btn-back" class="btn-menu">Вернуться в меню</button>
     </a>
   `;
+
+  const table = document.getElementById('score-table');
+  const scores = getScores();
+  scores.forEach((entry) => {
+    console.log(entry);
+    const row = document.createElement('tr');
+
+    const col1 = document.createElement('td');
+    col1.innerHTML = entry.user;
+    row.appendChild(col1);
+
+    const col2 = document.createElement('td');
+    col2.innerHTML = entry.score.toString();
+    row.appendChild(col2);
+
+    table.appendChild(row);
+  });
 };
 
 const displayAuthorize = (parent) => {
@@ -145,6 +182,7 @@ const displayGame = (parent) => {
           break;
         case 'hard':
           inGame = false;
+          saveScore();
           window.location.hash = 'score';
           break;
         default:
