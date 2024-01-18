@@ -1,4 +1,6 @@
 let username = '';
+let difficulty = '';
+let inGame = false;
 
 const displayStart = (parent) => {
   const el = parent;
@@ -11,6 +13,7 @@ const displayStart = (parent) => {
     </a>
   `;
 };
+
 const displayScore = (parent) => {
   const el = parent;
   el.innerHTML = `
@@ -46,6 +49,60 @@ const displayAuthorize = (parent) => {
     }
     console.log('username ok');
     username = val;
+
+    difficulty = 'easy';
+    inGame = true;
+    window.location.hash = 'game';
+  };
+};
+
+const displayGame = (parent) => {
+  const el = parent;
+
+  let diffcultyStr = '';
+  switch (difficulty) {
+    case 'easy':
+      diffcultyStr = 'Легкий';
+      break;
+    case 'normal':
+      diffcultyStr = 'Обычный';
+      break;
+    case 'hard':
+      diffcultyStr = 'Сложный';
+      break;
+    default:
+      break;
+  }
+
+  el.innerHTML = `
+    <h2>Уровень сложности: ${diffcultyStr}</h2>
+    <p>Угадайте за какое время (секунд) куб пройдет свой путь</p>
+    <div id="game-container"></div>
+    <a>
+      <button id="btn-watch" class="btn-menu">Посмотреть</button>
+    </a>
+    <input type="text" id="time"></input>
+    <a>
+      <button id="btn-answer" class="btn-menu">Ввести ответ</button>
+    </a>
+    <a href="#start">
+      <button id="btn-back" class="btn-menu">Вернуться в меню</button>
+    </a>
+  `;
+
+  const container = document.getElementById('game-container');
+  const input = document.getElementById('time');
+  const btnWatch = document.getElementById('btn-watch');
+  const btnAnswer = document.getElementById('btn-answer');
+
+  const cube = document.createElement('div');
+  cube.setAttribute('id', 'cube');
+  container.appendChild(cube);
+
+  btnWatch.onclick = () => {
+    cube.style.animationDuration = '2s';
+    cube.style.animationName = 'cube';
+    btnWatch.style.opacity = 0;
   };
 };
 
@@ -71,6 +128,13 @@ const showPage = (pageId) => {
       break;
     case 'authorize':
       displayAuthorize(contentDiv);
+      break;
+    case 'game':
+      if (inGame) {
+        displayGame(contentDiv);
+      } else {
+        window.location.hash = 'authorize';
+      }
       break;
     default:
       display404(contentDiv);
