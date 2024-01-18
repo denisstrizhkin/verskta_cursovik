@@ -1,6 +1,7 @@
 let username = '';
 let difficulty = '';
 let inGame = false;
+let userScore = 0;
 
 const displayStart = (parent) => {
   const el = parent;
@@ -52,6 +53,7 @@ const displayAuthorize = (parent) => {
 
     difficulty = 'easy';
     inGame = true;
+    userScore = 0;
     window.location.hash = 'game';
   };
 };
@@ -99,10 +101,28 @@ const displayGame = (parent) => {
   cube.setAttribute('id', 'cube');
   container.appendChild(cube);
 
+  const timeAnswer = 2;
+
   btnWatch.onclick = () => {
-    cube.style.animationDuration = '2s';
-    cube.style.animationName = 'cube';
+    cube.style.animationDuration = `${timeAnswer}s`;
+    cube.style.animationName = 'cube-easy-1';
     btnWatch.style.opacity = 0;
+  };
+
+  btnAnswer.onclick = () => {
+    const val = input.value;
+    const time = parseFloat(val);
+
+    if (isNaN(time)) {
+      console.log('bad time');
+      return;
+    }
+    console.log('time ok');
+    const score = timeAnswer - time;
+    console.log(score);
+    userScore += score;
+
+    // window.location.hash = 'game';
   };
 };
 

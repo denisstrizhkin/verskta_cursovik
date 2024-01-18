@@ -61,17 +61,27 @@ header {
   height: 8%;
   position: absolute;
   background: red;
-  bottom: 50%;
+  bottom: calc(50% - 4%);
   animation-timing-function: linear;
   animation-fill-mode: forwards;
 }
 
-@keyframes cube {
+@keyframes cube-easy-1 {
   from {
     left: 0%;
   }
 
   to {
     left: calc(100% - 8%);
+  }
+}
+
+@keyframes cube-easy-2 {
+  from {
+    left: calc(100% - 8%);
+  }
+
+  to {
+    left: 0%;
   }
 }
