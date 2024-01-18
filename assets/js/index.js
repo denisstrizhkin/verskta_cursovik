@@ -2,6 +2,11 @@ let username = '';
 let difficulty = '';
 let inGame = false;
 let userScore = 0;
+let beforeNextGame = 0;
+
+const getRandomInt = (start, end) => Math.floor(Math.random() * (end - start + 1)) + start;
+
+const getRandomFloat = (start, end) => Math.random() * (end - start) + start;
 
 const displayStart = (parent) => {
   const el = parent;
@@ -54,6 +59,7 @@ const displayAuthorize = (parent) => {
     difficulty = 'easy';
     inGame = true;
     userScore = 0;
+    beforeNextGame = getRandomInt(3, 5);
     window.location.hash = 'game';
   };
 };
@@ -77,7 +83,7 @@ const displayGame = (parent) => {
   }
 
   el.innerHTML = `
-    <h2>Уровень сложности: ${diffcultyStr}</h2>
+    <h2>Уровень сложности: ${diffcultyStr} | Очки: ${userScore}</h2>
     <p>Угадайте за какое время (секунд) куб пройдет свой путь</p>
     <div id="game-container"></div>
     <a>
@@ -101,11 +107,15 @@ const displayGame = (parent) => {
   cube.setAttribute('id', 'cube');
   container.appendChild(cube);
 
-  const timeAnswer = 2;
+  const timeAnswer = getRandomFloat(2, 4);
+  const animationID = getRandomInt(1, 2);
+  if (animationID === 2) {
+    cube.style.left = '92%';
+  }
 
   btnWatch.onclick = () => {
     cube.style.animationDuration = `${timeAnswer}s`;
-    cube.style.animationName = 'cube-easy-1';
+    cube.style.animationName = `cube-easy-${animationID}`;
     btnWatch.style.opacity = 0;
   };
 
@@ -113,7 +123,7 @@ const displayGame = (parent) => {
     const val = input.value;
     const time = parseFloat(val);
 
-    if (isNaN(time)) {
+    if (Number.isNaN(time)) {
       console.log('bad time');
       return;
     }
@@ -121,6 +131,28 @@ const displayGame = (parent) => {
     const score = timeAnswer - time;
     console.log(score);
     userScore += score;
+
+    if (beforeNextGame === 0) {
+      beforeNextGame = getRandomInt(3, 5);
+      switch (difficulty) {
+        case 'easy':
+          difficulty = 'normal';
+          showPage('game');
+          break;
+        case 'normal':
+          difficulty = 'hard';
+          showPage('game');
+          break;
+        case 'hard':
+          inGame = false;
+          window.location.hash = 'score';
+          break;
+        default:
+          break;
+      }
+    }
+    beforeNextGame -= 1;
+    showPage('game');
 
     // window.location.hash = 'game';
   };
