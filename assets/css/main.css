@@ -159,3 +159,38 @@ header {
     bottom: 0%;
   }
 }
+
+@keyframes cube-hard-1 {
+  0% {
+    left: 0%;
+  }
+
+  25% {
+    left: 79%;
+    bottom: calc(100% - 8%);
+  }
+
+  35% {
+    left: calc(100% - 8%);
+    bottom: 65%;
+  }
+
+  60% {
+    left: 23%;
+    bottom: 0%;
+  }
+
+  70% {
+    left: 0%;
+    bottom: 36%;
+  }
+
+  85% {
+    left: calc((100% - 8%) / 4 * 1);
+    bottom: calc(100% - 8%);
+  }
+
+  100% {
+    left: calc(100% - 8%);
+  }
+}
