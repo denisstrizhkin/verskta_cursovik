@@ -83,15 +83,24 @@ const displayAuthorize = (parent) => {
   const btn = document.getElementById('btn-username');
   const input = document.getElementById('username');
 
-  btn.onclick = () => {
-    const val = input.value;
+  const checkInput = (val) => {
     const re = /^[a-zA-Z0-9]+$/;
-    if (val.match(re) === null) {
-      console.log('bad username');
+    return val.match(re) === null;
+  };
+
+  input.oninput = () => {
+    if (checkInput(input.value)) {
+      input.style.background = 'var(--accent-red)';
       return;
     }
-    console.log('username ok');
-    username = val;
+    input.style.background = 'var(--accent-green)';
+  };
+
+  btn.onclick = () => {
+    if (checkInput(input.value)) {
+      return;
+    }
+    username = input.value;
 
     difficulty = 'easy';
     inGame = true;
@@ -170,6 +179,19 @@ const displayGame = (parent) => {
       break;
   }
 
+  const checkInput = (val) => {
+    const time = parseFloat(val);
+    return Number.isNaN(time);
+  };
+
+  input.oninput = () => {
+    if (checkInput(input.value)) {
+      input.style.background = 'var(--accent-red)';
+      return;
+    }
+    input.style.background = 'var(--accent-green)';
+  };
+
   btnWatch.onclick = () => {
     cube.style.animationDuration = `${timeAnswer}s`;
     cube.style.animationName = `cube-${difficulty}-${Math.floor((animationID + 1) / 2)}`;
@@ -181,16 +203,10 @@ const displayGame = (parent) => {
   };
 
   btnAnswer.onclick = () => {
-    const val = input.value;
-    const time = parseFloat(val);
-
-    if (Number.isNaN(time)) {
-      console.log('bad time');
+    if (checkInput(input.value)) {
       return;
     }
-    console.log('time ok');
-    const score = timeAnswer - time;
-    console.log(score);
+    const score = timeAnswer - parseFloat(input.value);
     userScore += score;
 
     if (beforeNextGame === 0) {
