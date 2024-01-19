@@ -44,6 +44,9 @@ const displayScore = (parent) => {
         <th>Очки</th>
       </tr>
     </table>
+    <a>
+      <button id="btn-clear" class="btn-menu">Очистить таблицу</button>
+    </a>
     <a href="#start">
       <button id="btn-back" class="btn-menu">Вернуться в меню</button>
     </a>
@@ -65,6 +68,12 @@ const displayScore = (parent) => {
 
     table.appendChild(row);
   });
+
+  const btnClear = document.getElementById('btn-clear');
+  btnClear.onclick = () => {
+    localStorage.clear();
+    showPage('score');
+  };
 };
 
 const displayAuthorize = (parent) => {
