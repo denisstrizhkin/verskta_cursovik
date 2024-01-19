@@ -104,23 +104,29 @@ const displayAuthorize = (parent) => {
 const displayGame = (parent) => {
   const el = parent;
 
+  const cube = document.createElement('div');
+  cube.setAttribute('id', 'cube');
+
   let diffcultyStr = '';
   switch (difficulty) {
     case 'easy':
       diffcultyStr = 'Легкий';
+      cube.style.background = 'var(--accent-purple)';
       break;
     case 'normal':
       diffcultyStr = 'Обычный';
+      cube.style.background = 'var(--accent-blue)';
       break;
     case 'hard':
       diffcultyStr = 'Сложный';
+      cube.style.background = 'var(--accent-red)';
       break;
     default:
       break;
   }
 
   el.innerHTML = `
-    <h2>Уровень сложности: ${diffcultyStr} | Очки: ${userScore}</h2>
+    <h2>Уровень: ${diffcultyStr} | Очки: ${userScore}</h2>
     <p>Угадайте за какое время (секунд) куб пройдет свой путь</p>
     <div id="game-container"></div>
     <a>
@@ -140,8 +146,6 @@ const displayGame = (parent) => {
   const btnWatch = document.getElementById('btn-watch');
   const btnAnswer = document.getElementById('btn-answer');
 
-  const cube = document.createElement('div');
-  cube.setAttribute('id', 'cube');
   container.appendChild(cube);
 
   const timeAnswer = getRandomFloat(2, 4);

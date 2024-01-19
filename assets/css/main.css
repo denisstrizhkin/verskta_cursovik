@@ -8,9 +8,10 @@
 }
 
 :root {
-  --accent-green: #b9fbc0;
-  --accent-red: #ffcfd2;
-  --accent-blue: #8eecf5;
+  --accent-green: #d3f8e2;
+  --accent-purple: #e4c1f9;
+  --accent-red: #f694c1;
+  --accent-blue: #a9def9;
   --accent-yellow: #fbf8cc;
   --dark-1: #353839;
   --dark-2: black;
@@ -64,10 +65,15 @@ header h1 {
 }
 
 #content h2 {
+  max-width: max(240px, 55%);
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1.5em;
   position: relative;
+}
+
+#content p {
+  max-width: max(240px, 55%);
 }
 
 #content h2::after {
@@ -126,7 +132,6 @@ header h1 {
   width: 8%;
   height: 8%;
   position: absolute;
-  background: red;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
   /*
