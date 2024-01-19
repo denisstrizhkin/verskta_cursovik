@@ -38,11 +38,13 @@ const displayScore = (parent) => {
   const el = parent;
   el.innerHTML = `
     <h2>Рейтинговая Таблица</h2>
-    <table id="score-table">
+    <table>
+      <tbody id="score-table">
       <tr>
         <th>Пользователь</th>
         <th>Очки</th>
       </tr>
+      </tbody>
     </table>
     <a>
       <button id="btn-clear" class="btn-menu">Очистить таблицу</button>
@@ -55,7 +57,6 @@ const displayScore = (parent) => {
   const table = document.getElementById('score-table');
   const scores = getScores();
   scores.forEach((entry) => {
-    console.log(entry);
     const row = document.createElement('tr');
 
     const col1 = document.createElement('td');
@@ -63,7 +64,7 @@ const displayScore = (parent) => {
     row.appendChild(col1);
 
     const col2 = document.createElement('td');
-    col2.innerHTML = entry.score.toString();
+    col2.innerHTML = entry.score.toFixed(2);
     row.appendChild(col2);
 
     table.appendChild(row);
@@ -144,7 +145,7 @@ const displayGame = (parent) => {
   }
 
   el.innerHTML = `
-    <h2>Уровень: ${diffcultyStr} | Очки: ${userScore}</h2>
+    <h2>Уровень: ${diffcultyStr} | Очки: ${userScore.toFixed(2)}</h2>
     <p>Угадайте за какое время (секунд) куб пройдет свой путь</p>
     <div id="game-container"></div>
     <a>
@@ -215,7 +216,17 @@ const displayGame = (parent) => {
     if (checkInput(input.value)) {
       return;
     }
-    const score = timeAnswer - parseFloat(input.value);
+    console.log(timeAnswer);
+    const diff = (timeAnswer - parseFloat(input.value)) ** 2;
+    let score;
+    if (diff === 0) {
+      score = 5;
+    } else {
+      score = 1 / diff;
+      if (score > 5) {
+        score = 5;
+      }
+    }
     userScore += score;
 
     if (beforeNextGame === 0) {

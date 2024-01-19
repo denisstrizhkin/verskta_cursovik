@@ -119,6 +119,20 @@ header h1 {
   outline: 5px solid var(--dark-2);
 }
 
+#score-table {
+  font-size: 1.125rem;
+}
+
+#score-table td,
+#score-table th {
+  padding: 0.25em;
+}
+
+#score-table th {
+  background: var(--accent-green);
+  color: var(--dark-2);
+}
+
 #game-container {
   background: var(--accent-yellow);
   width: 65%;
