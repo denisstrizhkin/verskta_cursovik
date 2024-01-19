@@ -149,8 +149,8 @@ const displayGame = (parent) => {
   container.appendChild(cube);
 
   const timeAnswer = getRandomFloat(2, 4);
-  // const animationID = getRandomInt(1, 4);
-  const animationID = 3;
+  const animationID = getRandomInt(1, 4);
+  // const animationID = 3;
   beforeNextGame = 0;
 
   switch (animationID) {
@@ -212,11 +212,10 @@ const displayGame = (parent) => {
         default:
           break;
       }
+    } else {
+      beforeNextGame -= 1;
+      showPage('game');
     }
-    beforeNextGame -= 1;
-    showPage('game');
-
-    // window.location.hash = 'game';
   };
 };
 
