@@ -127,17 +127,21 @@ const displayGame = (parent) => {
   cube.setAttribute('id', 'cube');
 
   let diffcultyStr = '';
+  let timeAnswer = 0;
   switch (difficulty) {
     case 'easy':
       diffcultyStr = 'Легкий';
+      timeAnswer = getRandomFloat(1, 4);
       cube.style.background = 'var(--accent-purple)';
       break;
     case 'normal':
       diffcultyStr = 'Обычный';
+      timeAnswer = getRandomFloat(2, 5);
       cube.style.background = 'var(--accent-blue)';
       break;
     case 'hard':
       diffcultyStr = 'Сложный';
+      timeAnswer = getRandomFloat(3, 6);
       cube.style.background = 'var(--accent-red)';
       break;
     default:
@@ -167,11 +171,10 @@ const displayGame = (parent) => {
 
   container.appendChild(cube);
 
-  const timeAnswer = getRandomFloat(2, 4);
   const animationID = getRandomInt(1, 4);
-  const animationCode = Math.floor((animationID + 1) / 2);
   // const animationID = 3;
-  beforeNextGame = 0;
+  // beforeNextGame = 0;
+  const animationCode = Math.floor((animationID + 1) / 2);
 
   switch (animationID) {
     case 1:
@@ -195,7 +198,7 @@ const displayGame = (parent) => {
   path.style.backgroundImage = `url(/assets/img/path-${difficulty}.svg)`;
   container.appendChild(path);
 
-  if (animationCode == 2) {
+  if (animationCode === 2) {
     path.style.transform = 'rotate(270deg)';
   }
 

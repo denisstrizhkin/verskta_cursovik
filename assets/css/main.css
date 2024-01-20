@@ -299,29 +299,29 @@ header h1 {
     bottom: calc(100% - 8%);
   }
 
-  25% {
-    left: 13%;
+  15% {
+    left: 0;
+    bottom: 23%;
+  }
+
+  30% {
+    left: 56%;
     bottom: 0%;
   }
 
-  35% {
-    left: 0%;
-    bottom: 27%;
+  40% {
+    left: calc(100% - 8%);
+    bottom: 23%;
   }
 
-  60% {
-    left: 69%;
+  65% {
+    left: 27%;
     bottom: calc(100% - 8%);
   }
 
-  70% {
-    left: calc(100% - 8%);
-    bottom: 56%;
-  }
-
-  85% {
+  75% {
     left: 0%;
-    bottom: calc((100% - 8%) / 4 * 1);
+    bottom: 79%;
   }
 
   100% {
