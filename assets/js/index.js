@@ -189,6 +189,16 @@ const displayGame = (parent) => {
       break;
   }
 
+  const path = document.createElement('div');
+  path.classList.add(`path-${difficulty}`);
+  path.classList.add('path');
+  container.appendChild(path);
+
+  if (animationID === 2 || animationID === 3) {
+    cube.style.animationDirection = 'reverse';
+    path.style.transform = 'rotate(270deg)';
+  }
+
   const checkInput = (val) => {
     const time = parseFloat(val);
     return Number.isNaN(time);
@@ -205,9 +215,6 @@ const displayGame = (parent) => {
   btnWatch.onclick = () => {
     cube.style.animationDuration = `${timeAnswer}s`;
     cube.style.animationName = `cube-${difficulty}-${Math.floor((animationID + 1) / 2)}`;
-    if (animationID === 2 || animationID === 3) {
-      cube.style.animationDirection = 'reverse';
-    }
 
     btnWatch.style.opacity = 0;
   };
