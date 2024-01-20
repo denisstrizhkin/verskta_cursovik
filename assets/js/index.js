@@ -56,6 +56,8 @@ const displayScore = (parent) => {
 
   const table = document.getElementById('score-table');
   const scores = getScores();
+  scores.sort((a, b) => b.score - a.score);
+
   scores.forEach((entry) => {
     const row = document.createElement('tr');
 
