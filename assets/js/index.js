@@ -169,6 +169,7 @@ const displayGame = (parent) => {
 
   const timeAnswer = getRandomFloat(2, 4);
   const animationID = getRandomInt(1, 4);
+  const animationCode = Math.floor((animationID + 1) / 2);
   // const animationID = 3;
   beforeNextGame = 0;
 
@@ -190,12 +191,11 @@ const displayGame = (parent) => {
   }
 
   const path = document.createElement('div');
-  path.classList.add(`path-${difficulty}`);
   path.classList.add('path');
+  path.style.backgroundImage = `url(/assets/img/path-${difficulty}.svg)`;
   container.appendChild(path);
 
-  if (animationID === 2 || animationID === 3) {
-    cube.style.animationDirection = 'reverse';
+  if (animationCode == 2) {
     path.style.transform = 'rotate(270deg)';
   }
 
@@ -214,7 +214,10 @@ const displayGame = (parent) => {
 
   btnWatch.onclick = () => {
     cube.style.animationDuration = `${timeAnswer}s`;
-    cube.style.animationName = `cube-${difficulty}-${Math.floor((animationID + 1) / 2)}`;
+    cube.style.animationName = `cube-${difficulty}-${animationCode}`;
+    if (animationID === 2 || animationID === 3) {
+      cube.style.animationDirection = 'reverse';
+    }
 
     btnWatch.style.opacity = 0;
   };

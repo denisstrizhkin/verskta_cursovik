@@ -155,10 +155,6 @@ header h1 {
   */
 }
 
-.path-normal {
-  background-image: url('/assets/img/path-normal.svg');
-}
-
 #cube {
   width: 8%;
   height: 8%;
