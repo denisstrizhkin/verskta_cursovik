@@ -25,7 +25,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
   background: var(--dark-1);
 }
 
@@ -51,6 +52,7 @@ header h1 {
   max-width: 800px;
   height: 100%;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -134,10 +136,19 @@ header h1 {
 }
 
 #game-container {
+  margin-top: 1em;
+  width: 100%;
+  flex: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#game {
   background: var(--accent-yellow);
   width: 65%;
   min-width: 300px;
-  margin-top: 1em;
   aspect-ratio: 1 / 1;
   position: relative;
 }

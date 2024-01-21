@@ -153,7 +153,9 @@ const displayGame = (parent) => {
   el.innerHTML = `
     <h2>Уровень: ${diffcultyStr} | Очки: ${userScore.toFixed(2)}</h2>
     <p>Угадайте за какое время (секунд) куб пройдет свой путь</p>
-    <div id="game-container"></div>
+    <div id="game-container">
+      <div id="game"></div>
+    </div>
     <a>
       <button id="btn-watch" class="btn-menu">Посмотреть</button>
     </a>
@@ -166,7 +168,7 @@ const displayGame = (parent) => {
     </a>
   `;
 
-  const container = document.getElementById('game-container');
+  const container = document.getElementById('game');
   const input = document.getElementById('time');
   const btnWatch = document.getElementById('btn-watch');
   const btnAnswer = document.getElementById('btn-answer');
