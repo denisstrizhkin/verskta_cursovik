@@ -70,7 +70,15 @@ header h1 {
   max-width: max(240px, 55%);
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1.5em;
+  margin-bottom: 1.2em;
+  position: relative;
+}
+
+#content h3 {
+  max-width: max(240px, 55%);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1em;
   position: relative;
 }
 

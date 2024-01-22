@@ -2,6 +2,7 @@ let username = '';
 let difficulty = '';
 let inGame = false;
 let userScore = 0;
+let scoreDiff = 0;
 let beforeNextGame = 0;
 
 const getRandomInt = (start, end) => Math.floor(Math.random() * (end - start + 1)) + start;
@@ -100,15 +101,7 @@ const displayAuthorize = (parent) => {
     return val.match(re) === null;
   };
 
-  input.oninput = () => {
-    if (checkInput(input.value)) {
-      input.style.background = 'var(--accent-red)';
-      return;
-    }
-    input.style.background = 'var(--accent-green)';
-  };
-
-  btn.onclick = () => {
+  const submitInput = () => {
     if (checkInput(input.value)) {
       return;
     }
@@ -119,6 +112,25 @@ const displayAuthorize = (parent) => {
     userScore = 0;
     beforeNextGame = getRandomInt(3, 5);
     window.location.hash = 'game';
+  };
+
+  input.oninput = () => {
+    if (checkInput(input.value)) {
+      input.style.background = 'var(--accent-red)';
+      return;
+    }
+    input.style.background = 'var(--accent-green)';
+  };
+
+  btn.onclick = () => {
+    submitInput();
+  };
+
+  input.onkeydown = (ev) => {
+    if (ev.key === 'Enter') {
+      ev.preventDefault();
+      submitInput();
+    }
   };
 };
 
@@ -151,7 +163,8 @@ const displayGame = (parent) => {
   }
 
   el.innerHTML = `
-    <h2>Уровень: ${diffcultyStr} | Очки: ${userScore.toFixed(2)}</h2>
+    <h2>Уровень: ${diffcultyStr}</h2>
+    <h3>Очки: ${userScore.toFixed(2)} (+${scoreDiff.toFixed(2)})</h3>
     <p>Угадайте за какое время (секунд) куб пройдет свой путь</p>
     <div id="game-container">
       <div id="game"></div>
@@ -163,17 +176,25 @@ const displayGame = (parent) => {
     <a>
       <button id="btn-answer" class="btn-menu">Ввести ответ</button>
     </a>
-    <a href="#start">
-      <button id="btn-back" class="btn-menu">Вернуться в меню</button>
+    <a>
+      <button id="btn-quit" class="btn-menu">Закончить игру</button>
     </a>
   `;
 
   const container = document.getElementById('game');
+  container.appendChild(cube);
+
   const input = document.getElementById('time');
   const btnWatch = document.getElementById('btn-watch');
   const btnAnswer = document.getElementById('btn-answer');
 
-  container.appendChild(cube);
+  const btnQuit = document.getElementById('btn-quit');
+  const quitGame = () => {
+    inGame = false;
+    saveScore();
+    window.location.hash = 'score';
+  };
+  btnQuit.onclick = quitGame;
 
   const animationID = getRandomInt(1, 4);
   // const animationID = 3;
@@ -229,7 +250,7 @@ const displayGame = (parent) => {
     btnWatch.style.opacity = 0;
   };
 
-  btnAnswer.onclick = () => {
+  const checkAnswer = () => {
     if (checkInput(input.value)) {
       return;
     }
@@ -244,6 +265,7 @@ const displayGame = (parent) => {
         score = 5;
       }
     }
+    scoreDiff = score;
     userScore += score;
 
     if (beforeNextGame === 0) {
@@ -258,9 +280,7 @@ const displayGame = (parent) => {
           showPage('game');
           break;
         case 'hard':
-          inGame = false;
-          saveScore();
-          window.location.hash = 'score';
+          quitGame();
           break;
         default:
           break;
@@ -268,6 +288,17 @@ const displayGame = (parent) => {
     } else {
       beforeNextGame -= 1;
       showPage('game');
+    }
+  };
+
+  btnAnswer.onclick = () => {
+    checkAnswer();
+  };
+
+  input.onkeydown = (ev) => {
+    if (ev.key === 'Enter') {
+      ev.preventDefault();
+      checkAnswer();
     }
   };
 };
