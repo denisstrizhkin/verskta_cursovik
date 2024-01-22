@@ -33,6 +33,22 @@ const Cube = class {
       default:
         break;
     }
+
+    this.isDown = false;
+
+    this.offsetX = 0;
+    this.offsetY = 0;
+
+    this.posX = 0;
+    this.posY = 0;
+
+    this.el.onmousedown = this.onMouseDown;
+  }
+
+  onMouseDown(event) {
+    this.isDown = true;
+    this.offsetX = this.el.offsetLeft - event.clientX;
+    this.offsetY = this.el.offsetTop - event.clientY;
   }
 
   setAnimationId(animationID) {
@@ -62,6 +78,36 @@ const Cube = class {
     if (this.animationID === 2 || this.animationID === 3) {
       this.el.style.animationDirection = 'reverse';
     }
+  }
+};
+
+const getDiffcultyStr = () => {
+  switch (difficulty) {
+    case 'easy':
+      return 'Легкий';
+    case 'bonus':
+      return 'Бонус';
+    case 'normal':
+      return 'Обычный';
+    case 'hard':
+      return 'Сложный';
+    default:
+      return '';
+  }
+};
+
+const getTimeAnswer = () => {
+  switch (difficulty) {
+    case 'easy':
+      return getRandomFloat(1, 4);
+    case 'bonus':
+      return getRandomFloat(1, 4);
+    case 'normal':
+      return getRandomFloat(2, 5);
+    case 'hard':
+      return getRandomFloat(3, 6);
+    default:
+      return 0;
   }
 };
 
@@ -255,31 +301,25 @@ const predictTimeCheckAnswer = (input, answer) => {
   }
 };
 
+const setupBonusGame = (cube) => {
+  const c = cube;
+
+  document.onmousemove = (ev) => {
+    ev.preventDefault();
+
+    if (c.isDown) {
+      c.posX = ev.clientX + c.offsetX;
+      c.posY = ev.clientY + c.offsetY;
+      c.updatePos();
+    }
+  };
+};
+
 const displayGame = (parent) => {
   const el = parent;
 
-  let diffcultyStr = '';
-  let timeAnswer = 0;
-  switch (difficulty) {
-    case 'easy':
-      diffcultyStr = 'Легкий';
-      timeAnswer = getRandomFloat(1, 4);
-      break;
-    case 'bonus':
-      diffcultyStr = 'Бонус';
-      timeAnswer = getRandomFloat(1, 4);
-      break;
-    case 'normal':
-      diffcultyStr = 'Обычный';
-      timeAnswer = getRandomFloat(2, 5);
-      break;
-    case 'hard':
-      diffcultyStr = 'Сложный';
-      timeAnswer = getRandomFloat(3, 6);
-      break;
-    default:
-      break;
-  }
+  const diffcultyStr = getDiffcultyStr();
+  const timeAnswer = getTimeAnswer();
 
   el.innerHTML = `
     <h2>Уровень: ${diffcultyStr}</h2>
@@ -302,6 +342,9 @@ const displayGame = (parent) => {
 
   const container = document.getElementById('game');
   const cube = new Cube(container);
+  if (difficulty === 'bonus') {
+    setupBonusGame(cube);
+  }
 
   const input = document.getElementById('time');
   const btnWatch = document.getElementById('btn-watch');
