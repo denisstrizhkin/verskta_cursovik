@@ -46,9 +46,12 @@ const Cube = class {
 
     this.timeTable = {};
     this.startTime = false;
+    this.stop = false;
   }
 
   onMouseDown(event) {
+    if (this.stop) return;
+
     this.isDown = true;
     this.offsetX = this.el.offsetLeft - event.clientX;
     this.offsetY = this.el.offsetTop - event.clientY;
@@ -176,7 +179,7 @@ const getTimeAnswer = () => {
     case 'easy':
       return getRandomFloat(1, 4);
     case 'bonus':
-      return getRandomFloat(1, 4);
+      return getRandomInt(1, 4);
     case 'normal':
       return getRandomFloat(2, 5);
     case 'hard':
@@ -391,6 +394,7 @@ const setupBonusGame = (cube) => {
 
   document.onmouseup = () => {
     c.isDown = false;
+    c.stop = true;
   };
 };
 
@@ -403,7 +407,11 @@ const displayGame = (parent) => {
   el.innerHTML = `
     <h2>Уровень: ${diffcultyStr}</h2>
     <h3>Очки: ${userScore.toFixed(2)} (+${scoreDiff.toFixed(2)})</h3>
-    <p>Угадайте за какое время (секунд) куб пройдет свой путь</p>
+    ${
+  difficulty === 'bonus'
+    ? `<p>Перетащие кубик на другую сторону за ${timeAnswer} секунд</p>`
+    : '<p>Угадайте за какое время (секунд) куб пройдет свой путь</p>'
+}
     <div id="game-container">
       <div id="game"></div>
     </div>
