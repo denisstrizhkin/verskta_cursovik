@@ -43,27 +43,87 @@ const Cube = class {
     this.posY = 0;
 
     this.el.onmousedown = (ev) => { this.onMouseDown(ev); };
+
+    this.timeTable = {};
+    this.startTime = false;
   }
 
   onMouseDown(event) {
     this.isDown = true;
     this.offsetX = this.el.offsetLeft - event.clientX;
     this.offsetY = this.el.offsetTop - event.clientY;
+
+    if (this.animationID === 1 || this.animationID === 4) {
+      this.moveCount = 1;
+    } else if (this.animationID === 2 || this.animationID === 3) {
+      this.moveCount = 9;
+    }
+    this.startTime = true;
   }
 
   updatePos() {
-    if (this.posX < 0) this.posX = 0;
+    if (this.posX < 0) {
+      this.posX = 0;
+    }
 
-    if (this.posY < 0) this.posY = 0;
+    if (this.posY < 0) {
+      this.posY = 0;
+    }
 
-    if (this.posX + this.el.clientWidth > this.parent.clientWidth) this.posX = this.parent.clientWidth - this.el.clientWidth;
+    if (this.posX + this.el.clientWidth > this.parent.clientWidth) {
+      this.posX = this.parent.clientWidth - this.el.clientWidth;
+    }
 
-    if (this.posY + this.el.clientHeight > this.parent.clientHeight) this.posY = this.parent.clientHeight - this.el.clientHeight;
+    if (this.posY + this.el.clientHeight > this.parent.clientHeight) {
+      this.posY = this.parent.clientHeight - this.el.clientHeight;
+    }
 
     const pX = (this.posX / this.parent.clientWidth) * 100;
     const pY = (this.posY / this.parent.clientHeight) * 100;
-    this.el.style.left = `${pX}%`;
-    this.el.style.top = `${pY}%`;
+
+    if (this.animationID === 1 || this.animationID === 2) {
+      this.el.style.left = `${pX}%`;
+      this.checkDiff(pX + 4);
+    } else if (this.animationID === 3 || this.animationID === 4) {
+      this.el.style.top = `${pY}%`;
+      this.checkDiff(pY + 4);
+    }
+  }
+
+  checkDiff(pNew) {
+    const d = 92 / 10;
+    const distance = d * this.moveCount + 4;
+
+    if (this.startTime) {
+      this.timeStart = Date.now();
+      this.startTime = false;
+    }
+
+    if (this.animationID === 1 || this.animationID === 4) {
+      if (pNew >= distance - 0.1) {
+        const timeEnd = Date.now();
+
+        this.timeTable[10 * this.moveCount] = timeEnd - this.timeStart;
+        this.timeStart = timeEnd;
+        this.moveCount += 1;
+
+        console.log(this.timeTable);
+        console.log(pNew);
+        console.log(distance);
+      }
+    } else if (this.animationID === 2 || this.animationID === 3) {
+      if (pNew <= distance + 0.1) {
+        const timeEnd = Date.now();
+
+        this.timeTable[10 * (this.moveCount + 1)] = timeEnd - this.timeStart;
+        this.timeStart = timeEnd;
+        this.moveCount -= 1;
+
+        console.log(this.timeTable);
+        console.log(pNew);
+        console.log(distance);
+      }
+    }
   }
 
   setAnimationId(animationID) {
