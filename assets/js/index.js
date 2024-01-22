@@ -9,6 +9,20 @@ const getRandomInt = (start, end) => Math.floor(Math.random() * (end - start + 1
 
 const getRandomFloat = (start, end) => Math.random() * (end - start) + start;
 
+const calcScore = (input, answer) => {
+  const maxScore = 5;
+  const diff = (answer - input) ** 2;
+  if (diff === 0) {
+    return maxScore;
+  }
+
+  const score = 1 / diff;
+  if (score > 5) {
+    return maxScore;
+  }
+  return score;
+};
+
 const getScores = () => {
   const scores = JSON.parse(localStorage.getItem('scores'));
   if (scores === null) {
@@ -21,6 +35,12 @@ const saveScore = () => {
   const scores = getScores();
   scores.push({ user: username, score: userScore });
   localStorage.setItem('scores', JSON.stringify(scores));
+};
+
+const quitGame = () => {
+  inGame = false;
+  saveScore();
+  window.location.hash = 'score';
 };
 
 const displayStart = (parent) => {
@@ -134,6 +154,51 @@ const displayAuthorize = (parent) => {
   };
 };
 
+const chooseNextLevel = () => {
+  beforeNextGame = getRandomInt(3, 5);
+  switch (difficulty) {
+    case 'easy':
+      difficulty = 'bonus';
+      showPage('game');
+      break;
+    case 'bonus':
+      difficulty = 'normal';
+      showPage('game');
+      break;
+    case 'normal':
+      difficulty = 'hard';
+      showPage('game');
+      break;
+    case 'hard':
+      quitGame();
+      break;
+    default:
+      break;
+  }
+};
+
+const predictTimeCheckInput = (val) => {
+  const time = parseFloat(val);
+  return Number.isNaN(time);
+};
+
+const predictTimeCheckAnswer = (input, answer) => {
+  if (predictTimeCheckInput(input.value)) {
+    return;
+  }
+  console.log(answer);
+  const score = calcScore(parseFloat(input.value), answer);
+  scoreDiff = score;
+  userScore += score;
+
+  if (beforeNextGame === 0) {
+    chooseNextLevel();
+  } else {
+    beforeNextGame -= 1;
+    showPage('game');
+  }
+};
+
 const displayGame = (parent) => {
   const el = parent;
 
@@ -145,6 +210,11 @@ const displayGame = (parent) => {
   switch (difficulty) {
     case 'easy':
       diffcultyStr = 'Легкий';
+      timeAnswer = getRandomFloat(1, 4);
+      cube.style.background = 'var(--accent-purple)';
+      break;
+    case 'bonus':
+      diffcultyStr = 'Бонус';
       timeAnswer = getRandomFloat(1, 4);
       cube.style.background = 'var(--accent-purple)';
       break;
@@ -189,11 +259,6 @@ const displayGame = (parent) => {
   const btnAnswer = document.getElementById('btn-answer');
 
   const btnQuit = document.getElementById('btn-quit');
-  const quitGame = () => {
-    inGame = false;
-    saveScore();
-    window.location.hash = 'score';
-  };
   btnQuit.onclick = quitGame;
 
   const animationID = getRandomInt(1, 4);
@@ -227,13 +292,8 @@ const displayGame = (parent) => {
     path.style.transform = 'rotate(270deg)';
   }
 
-  const checkInput = (val) => {
-    const time = parseFloat(val);
-    return Number.isNaN(time);
-  };
-
   input.oninput = () => {
-    if (checkInput(input.value)) {
+    if (predictTimeCheckInput(input.value)) {
       input.style.background = 'var(--accent-red)';
       return;
     }
@@ -250,55 +310,14 @@ const displayGame = (parent) => {
     btnWatch.style.opacity = 0;
   };
 
-  const checkAnswer = () => {
-    if (checkInput(input.value)) {
-      return;
-    }
-    console.log(timeAnswer);
-    const diff = (timeAnswer - parseFloat(input.value)) ** 2;
-    let score;
-    if (diff === 0) {
-      score = 5;
-    } else {
-      score = 1 / diff;
-      if (score > 5) {
-        score = 5;
-      }
-    }
-    scoreDiff = score;
-    userScore += score;
-
-    if (beforeNextGame === 0) {
-      beforeNextGame = getRandomInt(3, 5);
-      switch (difficulty) {
-        case 'easy':
-          difficulty = 'normal';
-          showPage('game');
-          break;
-        case 'normal':
-          difficulty = 'hard';
-          showPage('game');
-          break;
-        case 'hard':
-          quitGame();
-          break;
-        default:
-          break;
-      }
-    } else {
-      beforeNextGame -= 1;
-      showPage('game');
-    }
-  };
-
   btnAnswer.onclick = () => {
-    checkAnswer();
+    predictTimeCheckAnswer(input, timeAnswer);
   };
 
   input.onkeydown = (ev) => {
     if (ev.key === 'Enter') {
       ev.preventDefault();
-      checkAnswer();
+      predictTimeCheckAnswer(input, timeAnswer);
     }
   };
 };
