@@ -9,6 +9,62 @@ const getRandomInt = (start, end) => Math.floor(Math.random() * (end - start + 1
 
 const getRandomFloat = (start, end) => Math.random() * (end - start) + start;
 
+const Cube = class {
+  constructor(parent) {
+    this.parent = parent;
+
+    this.el = document.createElement('div');
+    this.el.setAttribute('id', 'cube');
+
+    this.parent.appendChild(this.el);
+    switch (difficulty) {
+      case 'easy':
+        this.el.style.background = 'var(--accent-purple)';
+        break;
+      case 'bonus':
+        this.el.style.background = 'var(--accent-purple)';
+        break;
+      case 'normal':
+        this.el.style.background = 'var(--accent-blue)';
+        break;
+      case 'hard':
+        this.el.style.background = 'var(--accent-red)';
+        break;
+      default:
+        break;
+    }
+  }
+
+  setAnimationId(animationID) {
+    this.animationID = animationID;
+
+    switch (this.animationID) {
+      case 1:
+        this.el.classList.add('cube-left');
+        break;
+      case 2:
+        this.el.classList.add('cube-right');
+        break;
+      case 3:
+        this.el.classList.add('cube-bottom');
+        break;
+      case 4:
+        this.el.classList.add('cube-top');
+        break;
+      default:
+        break;
+    }
+  }
+
+  animate(animationCode, timeAnswer) {
+    this.el.style.animationDuration = `${timeAnswer}s`;
+    this.el.style.animationName = `cube-${difficulty}-${animationCode}`;
+    if (this.animationID === 2 || this.animationID === 3) {
+      this.el.style.animationDirection = 'reverse';
+    }
+  }
+};
+
 const calcScore = (input, answer) => {
   const maxScore = 5;
   const diff = (answer - input) ** 2;
@@ -202,31 +258,24 @@ const predictTimeCheckAnswer = (input, answer) => {
 const displayGame = (parent) => {
   const el = parent;
 
-  const cube = document.createElement('div');
-  cube.setAttribute('id', 'cube');
-
   let diffcultyStr = '';
   let timeAnswer = 0;
   switch (difficulty) {
     case 'easy':
       diffcultyStr = 'Легкий';
       timeAnswer = getRandomFloat(1, 4);
-      cube.style.background = 'var(--accent-purple)';
       break;
     case 'bonus':
       diffcultyStr = 'Бонус';
       timeAnswer = getRandomFloat(1, 4);
-      cube.style.background = 'var(--accent-purple)';
       break;
     case 'normal':
       diffcultyStr = 'Обычный';
       timeAnswer = getRandomFloat(2, 5);
-      cube.style.background = 'var(--accent-blue)';
       break;
     case 'hard':
       diffcultyStr = 'Сложный';
       timeAnswer = getRandomFloat(3, 6);
-      cube.style.background = 'var(--accent-red)';
       break;
     default:
       break;
@@ -252,7 +301,7 @@ const displayGame = (parent) => {
   `;
 
   const container = document.getElementById('game');
-  container.appendChild(cube);
+  const cube = new Cube(container);
 
   const input = document.getElementById('time');
   const btnWatch = document.getElementById('btn-watch');
@@ -262,26 +311,11 @@ const displayGame = (parent) => {
   btnQuit.onclick = quitGame;
 
   const animationID = getRandomInt(1, 4);
+  cube.setAnimationId(animationID);
+
   // const animationID = 3;
   // beforeNextGame = 0;
   const animationCode = Math.floor((animationID + 1) / 2);
-
-  switch (animationID) {
-    case 1:
-      cube.classList.add('cube-left');
-      break;
-    case 2:
-      cube.classList.add('cube-right');
-      break;
-    case 3:
-      cube.classList.add('cube-bottom');
-      break;
-    case 4:
-      cube.classList.add('cube-top');
-      break;
-    default:
-      break;
-  }
 
   const path = document.createElement('div');
   path.classList.add('path');
@@ -301,12 +335,7 @@ const displayGame = (parent) => {
   };
 
   btnWatch.onclick = () => {
-    cube.style.animationDuration = `${timeAnswer}s`;
-    cube.style.animationName = `cube-${difficulty}-${animationCode}`;
-    if (animationID === 2 || animationID === 3) {
-      cube.style.animationDirection = 'reverse';
-    }
-
+    cube.animate(animationCode, timeAnswer);
     btnWatch.style.opacity = 0;
   };
 
