@@ -42,13 +42,28 @@ const Cube = class {
     this.posX = 0;
     this.posY = 0;
 
-    this.el.onmousedown = this.onMouseDown;
+    this.el.onmousedown = (ev) => { this.onMouseDown(ev); };
   }
 
   onMouseDown(event) {
     this.isDown = true;
     this.offsetX = this.el.offsetLeft - event.clientX;
     this.offsetY = this.el.offsetTop - event.clientY;
+  }
+
+  updatePos() {
+    if (this.posX < 0) this.posX = 0;
+
+    if (this.posY < 0) this.posY = 0;
+
+    if (this.posX + this.el.clientWidth > this.parent.clientWidth) this.posX = this.parent.clientWidth - this.el.clientWidth;
+
+    if (this.posY + this.el.clientHeight > this.parent.clientHeight) this.posY = this.parent.clientHeight - this.el.clientHeight;
+
+    const pX = (this.posX / this.parent.clientWidth) * 100;
+    const pY = (this.posY / this.parent.clientHeight) * 100;
+    this.el.style.left = `${pX}%`;
+    this.el.style.top = `${pY}%`;
   }
 
   setAnimationId(animationID) {
@@ -313,6 +328,10 @@ const setupBonusGame = (cube) => {
       c.updatePos();
     }
   };
+
+  document.onmouseup = () => {
+    c.isDown = false;
+  };
 };
 
 const displayGame = (parent) => {
@@ -357,7 +376,7 @@ const displayGame = (parent) => {
   cube.setAnimationId(animationID);
 
   // const animationID = 3;
-  // beforeNextGame = 0;
+  beforeNextGame = 0;
   const animationCode = Math.floor((animationID + 1) / 2);
 
   const path = document.createElement('div');
