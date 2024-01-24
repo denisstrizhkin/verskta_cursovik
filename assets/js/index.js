@@ -53,7 +53,8 @@ const Cube = class {
     this.startTime = false;
     this.stop = false;
 
-    this.completeTime = Date.now();
+    this.completeTime = null;
+    this.beginMovementTime = null;
   }
 
   onMouseDown(event) {
@@ -70,7 +71,7 @@ const Cube = class {
     }
     this.startTime = true;
 
-    this.completeTime = Date.now();
+    this.beginMovementTime = Date.now();
   }
 
   updatePos() {
@@ -116,6 +117,10 @@ const Cube = class {
         const timeEnd = Date.now();
 
         this.timeTable[10 * this.moveCount] = timeEnd - this.timeStart;
+        if (this.moveCount === 10) {
+          this.completeTime = (Date.now() - this.beginMovementTime) / 1000;
+        }
+
         this.timeStart = timeEnd;
         this.moveCount += 1;
 
@@ -128,6 +133,10 @@ const Cube = class {
         const timeEnd = Date.now();
 
         this.timeTable[10 * (this.moveCount + 1)] = timeEnd - this.timeStart;
+        if (this.moveCount === 0) {
+          this.completeTime = (Date.now() - this.beginMovementTime) / 1000;
+        }
+
         this.timeStart = timeEnd;
         this.moveCount -= 1;
 
@@ -424,8 +433,14 @@ const setupBonusGame = (cube, timeAnswer) => {
       c.isDown = false;
       c.stop = true;
 
-      const completeTime = (Date.now() - c.completeTime) / 1000;
+      if (c.completeTime === null) {
+        c.completeTime = (Date.now() - c.beginMovementTime) / 1000;
+      }
+
       const segments = Object.values(c.timeTable);
+      if (segments.length !== 10) {
+        c.completeTime = -1000;
+      }
 
       const std = getStandardDeviation(segments);
       const mean = getMean(segments);
@@ -441,12 +456,13 @@ const setupBonusGame = (cube, timeAnswer) => {
       const coeff = getCoeff(alpha);
       bonusCoeff = 1 - coeff;
 
+      console.log(c.completeTime);
       console.log(mean);
       console.log(std);
       console.log(coeff);
       console.log(bonusCoeff);
 
-      predictTimeCheckAnswer({ value: completeTime }, timeAnswer);
+      predictTimeCheckAnswer({ value: c.completeTime }, timeAnswer);
     }
   };
 };
