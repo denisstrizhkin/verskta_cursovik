@@ -1,9 +1,14 @@
 let username = '';
+
 let difficulty = '';
 let inGame = false;
+
 let userScore = 0;
 let scoreDiff = 0;
+
 let beforeNextGame = 0;
+
+let bonusCoeff = 0;
 
 const getRandomInt = (start, end) => Math.floor(Math.random() * (end - start + 1)) + start;
 
@@ -47,6 +52,8 @@ const Cube = class {
     this.timeTable = {};
     this.startTime = false;
     this.stop = false;
+
+    this.completeTime = Date.now();
   }
 
   onMouseDown(event) {
@@ -62,6 +69,8 @@ const Cube = class {
       this.moveCount = 9;
     }
     this.startTime = true;
+
+    this.completeTime = Date.now();
   }
 
   updatePos() {
@@ -368,8 +377,13 @@ const predictTimeCheckAnswer = (input, answer) => {
   }
   console.log(answer);
   const score = calcScore(parseFloat(input.value), answer);
-  scoreDiff = score;
-  userScore += score;
+
+  if (difficulty === 'bonus') {
+    scoreDiff = score * bonusCoeff;
+  } else {
+    scoreDiff = score;
+  }
+  userScore += scoreDiff;
 
   if (beforeNextGame === 0) {
     chooseNextLevel();
@@ -379,8 +393,21 @@ const predictTimeCheckAnswer = (input, answer) => {
   }
 };
 
-const setupBonusGame = (cube) => {
+const setupBonusGame = (cube, timeAnswer) => {
   const c = cube;
+
+  const getMean = (array) => array.reduce((a, b) => a + b) / array.length;
+
+  const getStandardDeviation = (array) => {
+    if (array.length < 2) {
+      return undefined;
+    }
+    const n = array.length;
+    const mean = getMean(array);
+    return Math.sqrt(
+      array.map((x) => (x - mean) ** 2).reduce((a, b) => a + b) / (n - 1),
+    );
+  };
 
   document.onmousemove = (ev) => {
     ev.preventDefault();
@@ -393,8 +420,34 @@ const setupBonusGame = (cube) => {
   };
 
   document.onmouseup = () => {
-    c.isDown = false;
-    c.stop = true;
+    if (c.isDown) {
+      c.isDown = false;
+      c.stop = true;
+
+      const completeTime = (Date.now() - c.completeTime) / 1000;
+      const segments = Object.values(c.timeTable);
+
+      const std = getStandardDeviation(segments);
+      const mean = getMean(segments);
+      const alpha = std / mean;
+
+      const getCoeff = (a) => {
+        const offset = 0.2;
+        if (a < (1 - offset)) return 0;
+        if (a > (2 - offset)) return 1;
+        return a;
+      };
+
+      const coeff = getCoeff(alpha);
+      bonusCoeff = 1 - coeff;
+
+      console.log(mean);
+      console.log(std);
+      console.log(coeff);
+      console.log(bonusCoeff);
+
+      predictTimeCheckAnswer({ value: completeTime }, timeAnswer);
+    }
   };
 };
 
@@ -415,6 +468,10 @@ const displayGame = (parent) => {
     <div id="game-container">
       <div id="game"></div>
     </div>
+    ${
+  difficulty === 'bonus'
+    ? ''
+    : `
     <a>
       <button id="btn-watch" class="btn-menu">Посмотреть</button>
     </a>
@@ -422,6 +479,8 @@ const displayGame = (parent) => {
     <a>
       <button id="btn-answer" class="btn-menu">Ввести ответ</button>
     </a>
+  `
+}
     <a>
       <button id="btn-quit" class="btn-menu">Закончить игру</button>
     </a>
@@ -430,7 +489,7 @@ const displayGame = (parent) => {
   const container = document.getElementById('game');
   const cube = new Cube(container);
   if (difficulty === 'bonus') {
-    setupBonusGame(cube);
+    setupBonusGame(cube, timeAnswer);
   }
 
   const input = document.getElementById('time');
@@ -444,7 +503,7 @@ const displayGame = (parent) => {
   cube.setAnimationId(animationID);
 
   // const animationID = 3;
-  beforeNextGame = 0;
+  // beforeNextGame = 0;
   const animationCode = Math.floor((animationID + 1) / 2);
 
   const path = document.createElement('div');
